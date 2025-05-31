@@ -2,7 +2,6 @@ export interface Admin {
   id: number;
   name: string;
   email: string;
-  // password is ignored in frontend
 }
 
 export interface OfferedService {
