@@ -1,17 +1,18 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import BookingPage from './pages/BookingPage'
+import AdminPage from './pages/AdminPage'
+import Layout from './components/Layout'
 
 function App() {
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="p-4 shadow bg-white">
-                <h1 className="text-xl font-bold text-center">
-                    Book a Service
-                </h1>
-            </header>
-            <main className="max-w-md mx-auto mt-8">
-                <BookingPage />
-            </main>
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    <Route index element={<BookingPage />} />
+                    <Route path="admin" element={<AdminPage />} />
+                </Route>
+            </Routes>
+        </Router>
     )
 }
 

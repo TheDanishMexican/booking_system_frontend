@@ -38,8 +38,8 @@ export default function BookingPage() {
                 selectedService={selectedService}
                 onSelect={(service) => {
                     setSelectedService(service)
-                    setSelectedSlot(null) // reset slot when service changes
-                    setBookingComplete(false) // reset booking state
+                    setSelectedSlot(null)
+                    setBookingComplete(false)
                 }}
             />
 
