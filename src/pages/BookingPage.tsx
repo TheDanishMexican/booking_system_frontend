@@ -3,6 +3,7 @@ import { OfferedService, TimeSlot } from '../types/models'
 import ServiceList from '../components/ServiceList'
 import TimeSlotList from '../components/TimeSlotList'
 import BookingForm from '../components/BookingForm'
+import Modal from '../components/Modal'
 
 export default function BookingPage() {
     const [services, setServices] = useState<OfferedService[]>([])
@@ -60,12 +61,20 @@ export default function BookingPage() {
                 </>
             )}
 
-            {selectedService && selectedSlot && !bookingComplete && (
-                <BookingForm
-                    serviceId={selectedService.id}
-                    timeSlotId={selectedSlot.id}
-                    onSuccess={() => setBookingComplete(true)}
-                />
+            {selectedService && selectedSlot && (
+                <Modal onClose={() => setSelectedSlot(null)}>
+                    <BookingForm
+                        serviceId={selectedService.id}
+                        timeSlotId={selectedSlot.id}
+                        selectedService={selectedService}
+                        selectedSlot={selectedSlot}
+                        onSuccess={() => {
+                            setBookingComplete(true)
+                            setSelectedSlot(null)
+                            setSelectedService(null)
+                        }}
+                    />
+                </Modal>
             )}
 
             {bookingComplete && (

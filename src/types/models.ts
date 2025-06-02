@@ -16,6 +16,7 @@ export interface TimeSlot {
   startTime: string;
   endTime: string;
   offeredService: OfferedService;
+  location: string;
 }
 
 export interface Customer {
@@ -30,6 +31,8 @@ export interface Booking {
   status: string;
   paid: boolean;
   timeSlot: TimeSlot;
-  customer: Customer;
+  name: string;
+  email: string;
+  phone: string;
 }
 

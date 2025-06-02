@@ -12,7 +12,7 @@ export default function ServiceList({
     onSelect,
 }: Props) {
     return (
-        <ul className="p-4 space-y-2">
+        <ul className="space-y-3">
             {services.map((service) => {
                 const isSelected = selectedService?.id === service.id
 
@@ -20,14 +20,22 @@ export default function ServiceList({
                     <li
                         key={service.id}
                         onClick={() => onSelect(service)}
-                        className={`p-3 border rounded cursor-pointer hover:bg-gray-100 ${
-                            isSelected ? 'bg-blue-100 border-blue-400' : ''
-                        }`}
+                        className={`border rounded-lg p-4 shadow-sm cursor-pointer transition 
+                            ${
+                                isSelected
+                                    ? 'bg-blue-100 border-blue-400'
+                                    : 'hover:bg-gray-50'
+                            }`}
                     >
-                        <p className="font-medium">{service.name}</p>
-                        <p className="text-sm text-gray-600">
-                            DKK {service.price}
+                        <p className="text-lg font-semibold">{service.name}</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                            💰 DKK {service.price}
                         </p>
+                        {service.description && (
+                            <p className="text-sm text-gray-500 mt-1">
+                                {service.description}
+                            </p>
+                        )}
                     </li>
                 )
             })}

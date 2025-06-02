@@ -9,14 +9,18 @@ type Props = {
 export default function TimeSlotForm({ services, onSuccess }: Props) {
     const [selectedServiceId, setSelectedServiceId] = useState<string>('')
     const [startTime, setStartTime] = useState('')
-    const [endTime, setEndTime] = useState('')
+    const [duration, setDuration] = useState('')
     const [message, setMessage] = useState('')
+    const [location, setLocation] = useState('')
 
     const handleCreateTimeSlot = async () => {
-        if (!selectedServiceId || !startTime) {
-            setMessage('Please select a service and time.')
+        if (!selectedServiceId || !startTime || !duration || !location) {
+            setMessage('Please fill in all fields.')
             return
         }
+
+        const start = new Date(startTime)
+        const end = new Date(start.getTime() + Number(duration) * 60000)
 
         try {
             const res = await fetch('/api/timeslots', {
@@ -24,8 +28,9 @@ export default function TimeSlotForm({ services, onSuccess }: Props) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     offeredServiceId: Number(selectedServiceId),
-                    startTime: new Date(startTime).toISOString(),
-                    endTime: new Date(endTime).toISOString(),
+                    startTime: start.toISOString(),
+                    endTime: end.toISOString(),
+                    location,
                 }),
             })
 
@@ -33,8 +38,9 @@ export default function TimeSlotForm({ services, onSuccess }: Props) {
 
             setMessage('✅ Time slot created!')
             setStartTime('')
-            setEndTime('')
+            setDuration('')
             setSelectedServiceId('')
+            setLocation('')
             onSuccess()
         } catch (err) {
             console.error(err)
@@ -71,12 +77,24 @@ export default function TimeSlotForm({ services, onSuccess }: Props) {
             </div>
 
             <div>
-                <label className="block mb-1">End time</label>
+                <label className="block mb-1">Location</label>
                 <input
-                    type="datetime-local"
+                    type="text"
                     className="w-full border rounded p-2"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="Enter location (e.g. Zoom, Office)"
+                />
+            </div>
+
+            <div>
+                <label className="block mb-1">Duration (minutes)</label>
+                <input
+                    type="number"
+                    className="w-full border rounded p-2"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    min={1}
                 />
             </div>
 
