@@ -3,6 +3,7 @@ import { OfferedService } from '../types/models'
 import TimeSlotForm from '../components/TimeSlotForm'
 import ServiceForm from '../components/ServiceForm'
 import BookingList from '../components/BookingList'
+import AdminViewButtons from '../components/AdminViewButtons'
 
 export default function AdminPage() {
     const [services, setServices] = useState<OfferedService[]>([])
@@ -40,38 +41,7 @@ export default function AdminPage() {
         <div className="p-4 max-w-md mx-auto">
             <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
 
-            <div className="flex space-x-2 mb-4">
-                <button
-                    onClick={() => setView('timeslots')}
-                    className={`px-4 py-2 rounded ${
-                        view === 'timeslots'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200'
-                    }`}
-                >
-                    Time Slots
-                </button>
-                <button
-                    onClick={() => setView('services')}
-                    className={`px-4 py-2 rounded ${
-                        view === 'services'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200'
-                    }`}
-                >
-                    Services
-                </button>
-                <button
-                    onClick={() => setView('bookings')}
-                    className={`px-4 py-2 rounded ${
-                        view === 'bookings'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-200'
-                    }`}
-                >
-                    Bookings
-                </button>
-            </div>
+            <AdminViewButtons currentView={view} onChange={setView} />
 
             {view === 'timeslots' && <TimeSlotForm services={services} />}
 

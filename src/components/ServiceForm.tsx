@@ -5,11 +5,12 @@ type Props = {
     onServiceCreated: (service: OfferedService) => void
 }
 
-export default function ServiceList({ onServiceCreated }: Props) {
+export default function ServiceForm({ onServiceCreated }: Props) {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState('')
     const [message, setMessage] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const validateInputs = () => {
         if (!name || !price) {
@@ -24,21 +25,30 @@ export default function ServiceList({ onServiceCreated }: Props) {
 
         if (!validateInputs()) return
 
-        const res = await fetch('/api/offered-services', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, description, price }),
-        })
+        setLoading(true)
+        setMessage('')
 
-        if (res.ok) {
+        try {
+            const res = await fetch('/api/offered-services', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, description, price }),
+            })
+
+            if (!res.ok) throw new Error(`Server error: ${res.status}`)
+
             const created = await res.json()
             onServiceCreated(created)
+
             setName('')
             setDescription('')
             setPrice('')
             setMessage('✅ Service created successfully.')
-        } else {
+        } catch (err) {
+            console.error('Failed to create service', err)
             setMessage('❌ Failed to create service.')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -66,9 +76,10 @@ export default function ServiceList({ onServiceCreated }: Props) {
             />
             <button
                 type="submit"
-                className="bg-green-500 text-white px-4 py-2 rounded"
+                className="w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
+                disabled={loading}
             >
-                Create Service
+                {loading ? 'Creating...' : 'Create Service'}
             </button>
 
             {message && (

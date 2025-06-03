@@ -19,10 +19,13 @@ export default function TimeSlotList({
         const fetchSlots = async () => {
             try {
                 const res = await fetch(`/api/timeslots/service/${serviceId}`)
+                if (!res.ok) throw new Error(`Server error: ${res.status}`)
+
                 const data = await res.json()
                 setSlots(data)
             } catch (err) {
                 console.error('Failed to load time slots', err)
+                alert('Kunne ikke hente ledige tider. Prøv igen senere.')
             } finally {
                 setLoading(false)
             }
