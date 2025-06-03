@@ -9,9 +9,20 @@ export default function ServiceList({ onServiceCreated }: Props) {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState('')
+    const [message, setMessage] = useState('')
+
+    const validateInputs = () => {
+        if (!name || !price) {
+            setMessage('Please fill in all required fields.')
+            return false
+        }
+        return true
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        if (!validateInputs()) return
 
         const res = await fetch('/api/offered-services', {
             method: 'POST',
@@ -25,8 +36,9 @@ export default function ServiceList({ onServiceCreated }: Props) {
             setName('')
             setDescription('')
             setPrice('')
+            setMessage('✅ Service created successfully.')
         } else {
-            alert('Failed to create service')
+            setMessage('❌ Failed to create service.')
         }
     }
 
@@ -37,7 +49,6 @@ export default function ServiceList({ onServiceCreated }: Props) {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Service Name"
                 className="w-full border p-2 rounded"
-                required
             />
             <input
                 type="number"
@@ -45,7 +56,7 @@ export default function ServiceList({ onServiceCreated }: Props) {
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="Price (DKK)"
                 className="w-full border p-2 rounded"
-                required
+                min={0}
             />
             <textarea
                 value={description}
@@ -59,6 +70,10 @@ export default function ServiceList({ onServiceCreated }: Props) {
             >
                 Create Service
             </button>
+
+            {message && (
+                <p className="text-sm text-center text-gray-700">{message}</p>
+            )}
         </form>
     )
 }

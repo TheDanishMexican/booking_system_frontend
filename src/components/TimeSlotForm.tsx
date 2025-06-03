@@ -3,21 +3,33 @@ import { OfferedService } from '../types/models'
 
 type Props = {
     services: OfferedService[]
-    onSuccess: () => void
 }
 
-export default function TimeSlotForm({ services, onSuccess }: Props) {
+export default function TimeSlotForm({ services }: Props) {
     const [selectedServiceId, setSelectedServiceId] = useState<string>('')
     const [startTime, setStartTime] = useState('')
     const [duration, setDuration] = useState('')
     const [message, setMessage] = useState('')
     const [location, setLocation] = useState('')
 
-    const handleCreateTimeSlot = async () => {
+    const onSuccess = () => {
+        setMessage('✅ Time slot created successfully!')
+        setStartTime('')
+        setDuration('')
+        setSelectedServiceId('')
+        setLocation('')
+    }
+
+    const validateInputs = () => {
         if (!selectedServiceId || !startTime || !duration || !location) {
             setMessage('Please fill in all fields.')
-            return
+            return false
         }
+        return true
+    }
+
+    const handleCreateTimeSlot = async () => {
+        if (!validateInputs()) return
 
         const start = new Date(startTime)
         const end = new Date(start.getTime() + Number(duration) * 60000)
@@ -36,11 +48,6 @@ export default function TimeSlotForm({ services, onSuccess }: Props) {
 
             if (!res.ok) throw new Error('Failed to create time slot')
 
-            setMessage('✅ Time slot created!')
-            setStartTime('')
-            setDuration('')
-            setSelectedServiceId('')
-            setLocation('')
             onSuccess()
         } catch (err) {
             console.error(err)

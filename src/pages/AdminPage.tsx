@@ -15,12 +15,15 @@ export default function AdminPage() {
         const fetchServices = async () => {
             try {
                 const res = await fetch('/api/offered-services')
+                if (!res.ok) throw new Error(`Server error: ${res.status}`) // ✅ Catches server response errors
+
                 const data = await res.json()
-                setServices(data)
+                setServices(data) // ✅ Only happens if data is valid
             } catch (err) {
-                console.error('Failed to load services', err)
+                console.error('Failed to load services', err) // ✅ Developer feedback
+                alert('Kunne ikke hente services. Prøv igen senere.') // ✅ User feedback
             } finally {
-                setLoading(false)
+                setLoading(false) // ✅ Ensures app state is handled properly
             }
         }
 
@@ -70,15 +73,7 @@ export default function AdminPage() {
                 </button>
             </div>
 
-            {/* Conditional Rendering */}
-            {view === 'timeslots' && (
-                <TimeSlotForm
-                    services={services}
-                    onSuccess={() =>
-                        console.log('Trainer created new time slot')
-                    }
-                />
-            )}
+            {view === 'timeslots' && <TimeSlotForm services={services} />}
 
             {view === 'services' && (
                 <ServiceForm onServiceCreated={handleServiceCreated} />
