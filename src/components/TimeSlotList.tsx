@@ -19,6 +19,7 @@ export default function TimeSlotList({
         const fetchSlots = async () => {
             try {
                 const res = await fetch(`/api/timeslots/service/${serviceId}`)
+
                 if (!res.ok) throw new Error(`Server error: ${res.status}`)
 
                 const data = await res.json()
